@@ -1,0 +1,27 @@
+- Štruktury správ ukladať do súboru :
+{ServiceName}_messages.h
+- Do namespace :
+Messages::{ServiceName}
+- ku každej strukture napísať popis
+/**
+*/
+napr.
+
+namespace Messages{
+    namespace TestService{
+        /**
+        * Správa Msg1 
+        * int a - hodnota test ...
+        */
+        struct Msg1{
+            int a;
+        }
+    }
+}
+
+Názov správy pre messenger
+"{ServiceName}::{MessageName}"
+
+napr.
+
+"TestService::Msg1"

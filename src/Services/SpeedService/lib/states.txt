@@ -1,0 +1,9 @@
+BOOT:
+    -nereagovat na spravy
+INIT:
+    -reagovat iba na diagnostiku
+NORMAL;
+    -normalny chod
+STANTBY;
+    -nereaguje na spravy
+;

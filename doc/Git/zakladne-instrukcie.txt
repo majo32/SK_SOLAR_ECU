@@ -1,0 +1,16 @@
+získanie vetvy zo serveru
+    - remote->fetch
+prepnutie medzi vetvami
+    - checkout->checkout revision ( ak prepínam na vetvu z remote zaskrtnem vytvorenie novej vetvy s takym menom)
+spojenie vetiev
+    branch/tag->merge revision
+push na server
+    - remote->push
+
+
+!!! pred akymykolvek zmenami commit
+!!! nepushovat do vetiev
+    -master
+    -test
+    -core
+    

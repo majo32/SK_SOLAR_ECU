@@ -1,0 +1,6 @@
+nbproject
+bin/debug/*
+bin/tests/*
+bin/objects/*
+tests/main.cpp
+debug/main.cpp

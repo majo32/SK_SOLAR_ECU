@@ -1,0 +1,18 @@
+SunStorm::Service:
+- RegisterListener(message_pattern,listener)
+- SendMessage(message)
+- RegisterTimeout(time,listener)
+- RegisterInterval(time,listener)
+- StopInterval(id_interval)
+- RegisterThread(thread)
+- RegisterExecutor(executor)
+
+SunStorm::ServiceListener<Service_Class, Context_class>
+- SendMessage(message)
+- RegisterTimeout(time,listener)
+- RegisterInterval(time,listener)
+- StopInterval(id_interval)
+- GetService()
+- GetContext()
+
+GenetricContext
