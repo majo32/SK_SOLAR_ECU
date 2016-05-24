@@ -40,9 +40,30 @@ namespace Messages{
            bool blinkerR;
            
        };
+       
        struct LanSpeedRqstSet0x20{
            int speedSet;
        };
+       /*
+        Odpovede pre skladac zo servisov svetiel
+        */
+       struct FrontLightResponse{
+           bool state;
+       };
+       
+       struct BlinkerResponse{
+           bool right;
+           bool left;
+       };
+       
+       struct HornResponse{
+           bool state;
+       };
+       
+       struct BreakLightResponse{
+           bool state;
+       };
+       
     };
 };
 
