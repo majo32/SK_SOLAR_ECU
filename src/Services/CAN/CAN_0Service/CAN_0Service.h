@@ -51,7 +51,7 @@ namespace Services {
         public:
 
             CAN_0Service(std::string name) :
-            Service(name, context), context(), composer(*this), decomposer(*this) {
+            ECU::Service(name, context), context(), composer(*this), decomposer(*this) {
             }
 
             Context & GetContext() {

@@ -41,7 +41,7 @@ public:
     };
 
     TestS(std::string name) :
-    ECU::Service(name) {
+    ECU::Service(name,ctx) {
     }
 
     void RegisterListeners() {
@@ -49,6 +49,7 @@ public:
     }
 
     fn fx;
+    Context ctx;
 };
 
 int main(int argc, char** argv) {

@@ -57,6 +57,7 @@ namespace ECU {
                 this->GetServiceBase().GetID()
             }));
             this->GetContext().SetStates(transaction.state, transaction.prev_state);
+            
             this->functionComposer.Run(transaction);
             this->SendMessage(msg);
         }

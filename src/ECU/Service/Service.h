@@ -17,10 +17,10 @@
 namespace ECU {
 
     class Service : public SunStorm::Service {
-    public:
+    protected:
 
-        Service(std::string name) :
-        SunStorm::Service(name), genericContext(), genericListener(*this, genericContext) {
+        Service(std::string name, GenericContext & ctx) :
+        SunStorm::Service(name), genericContext(ctx), genericListener(*this, genericContext) {
         }
 
         void Initialize() {
@@ -39,7 +39,7 @@ namespace ECU {
 
 
     private:
-        GenericContext genericContext;
+        GenericContext & genericContext;
         GenericListener genericListener;
 
     };
