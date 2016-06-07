@@ -14,6 +14,10 @@
 #include <list>
 #include <stdexcept>
 
+#include <spdlog/spdlog.h>
+
+
+
 namespace SunStorm {
     class System;
     class LoggerManager;
@@ -21,8 +25,8 @@ namespace SunStorm {
     class Logger {
     private:
 
-        Logger(std::string name) :
-        name(name) {
+        Logger(const std::string name) :
+        name(name), logger(spdlog::stdout_logger_mt(name, true)) {
         }
 
         Logger(const Logger& orig) = delete;
@@ -32,24 +36,87 @@ namespace SunStorm {
         }
     public:
 
-        void info(const std::string txt) {
-            std::cout << nowLongVal() << " " << name << " INFO " << txt << std::endl;
+        /*template<typename... Args>
+        spdlog::details::line_logger warn(const char* msg, const Args&... args) {
+            return logger->warn(msg, args...);
         }
 
-        void warn(const std::string txt) {
-            std::cout << nowLongVal() << " " << name << " WARN " << txt << std::endl;
+        template<typename... Args>
+        spdlog::details::line_logger error(const char* msg, const Args&... args) {
+            return logger->error(msg, args...);
         }
 
-        void error(const std::string txt) {
-            std::cout << nowLongVal() << " " << name << " ERROR " << txt << std::endl;
+        template<typename... Args>
+        spdlog::details::line_logger info(const char* msg, const Args&... args) {
+            return logger->info(msg, args...);
         }
 
-        void debug(const std::string txt) {
-            std::cout << nowLongVal() << " " << name << " DEBUG " << txt << std::endl;
+        template<typename... Args>
+        spdlog::details::line_logger debug(const char* msg, const Args&... args) {
+            return logger->debug(msg, args...);
         }
+*/
+        template<typename T>
+        spdlog::details::line_logger warn(const T& msg) {
+            return logger->warn(msg);
+        }
+
+        template<typename T>
+        spdlog::details::line_logger error(const T& msg) {
+            return logger->error(msg);
+        }
+
+        template<typename T>
+        spdlog::details::line_logger info(const T& msg) {
+            return logger->info(msg);
+        }
+
+        template<typename T>
+        spdlog::details::line_logger debug(const T& msg) {
+            return logger->debug(msg);
+        }
+
+        spdlog::details::line_logger warn() {
+            return logger->warn("sds");
+
+        }
+
+        spdlog::details::line_logger error() {
+            return logger->error();
+
+        }
+
+        spdlog::details::line_logger info() {
+            return logger->info();
+
+        }
+
+        spdlog::details::line_logger debug() {
+            return logger->debug();
+
+        }
+       
+
+        /* void info(const std::string txt) {
+             logger->debug();
+             std::cout << nowLongVal() << " " << name << " INFO " << txt << std::endl;
+         }
+
+         void warn(const std::string txt) {
+             std::cout << nowLongVal() << " " << name << " WARN " << txt << std::endl;
+         }
+
+         void error(const std::string txt) {
+             std::cout << nowLongVal() << " " << name << " ERROR " << txt << std::endl;
+         }
+
+         void debug(const std::string txt) {
+             std::cout << nowLongVal() << " " << name << " DEBUG " << txt << std::endl;
+         }*/
 
     private:
-        std::string name;
+        const std::string name;
+        std::shared_ptr<spdlog::logger> logger;
 
         long nowLongVal() {
             auto now = std::chrono::system_clock::now();
@@ -113,6 +180,7 @@ namespace SunStorm {
 
             LoggerManagerContext(std::string loggerName) :
             loggers(), mainLogger(loggerName) {
+                spdlog::set_level(spdlog::level::debug);
             }
 
             std::list<LoggerItem> loggers;
@@ -120,7 +188,7 @@ namespace SunStorm {
         };
 
         static LoggerManagerContext & GetLoggerManagerContext() {
-            static LoggerManagerContext ctx("__MAIN__");
+            static LoggerManagerContext ctx("main");
             return ctx;
         }
     };

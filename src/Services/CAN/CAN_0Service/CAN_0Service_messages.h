@@ -26,22 +26,22 @@ namespace Messages {
             };
 
             struct SpeedActRequest {
-                int value;
+                std::uint8_t value;
             };
 
             struct SpeedOptRequest {
-                int value;
+                std::uint8_t value;
             };
 
             struct SpeedRqstRequest {
-                int value;
+                std::uint8_t value;
             };
             
             
             
 
             struct SpeedRqstResponse {
-                int value;
+                std::uint8_t value;
             };
 
             struct FrontLightResponse {

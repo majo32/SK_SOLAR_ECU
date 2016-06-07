@@ -10,10 +10,16 @@
 
 #include <SunStorm/Framework.h>
 
-namespace ECU{
-    template <class S,class C>
-    class Listener : public SunStorm::ServiceListener<S,C>{
-    
+namespace ECU {
+
+    template <class S, class C>
+    class Listener : public SunStorm::ServiceListener<S, C> {
+    public:
+
+        Listener(S& service, C& context) :
+        SunStorm::ServiceListener<S, C>(service, context) {
+        }
+
     };
 }
 
