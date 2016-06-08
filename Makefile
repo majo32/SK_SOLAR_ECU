@@ -1,8 +1,8 @@
 mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
 current_dir := $(dir $(mkfile_path))
-INC=-I./lib -I./src
+INC=-I./lib -I./src -I./config
 CC=g++
-FOLDERS=./lib ./src
+FOLDERS=./lib ./src 
 OBJ_FOLDER=bin/objects
 SOURCES=$(shell for file in `find $(FOLDERS) -name '*.cpp'`;do echo $$file; done)
 OBJECTS=$(shell for file1 in `for file in $(SOURCES);do echo $$file | sed 's/.cpp/.o/g'; done`;do echo "$(OBJ_FOLDER)/$$file1"; done; )

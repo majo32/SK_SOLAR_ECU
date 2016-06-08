@@ -9,7 +9,7 @@
 #define	CANCONNECTOR_H
 
 #include "CANConnectorInterface.h"
-#include <CanSocket/Socket.h>
+#include <Connectors/CanSocket/Socket.h>
 namespace Drivers {
     namespace CAN {
         class CANConnector : public CANConnectorInterface{
@@ -22,7 +22,7 @@ namespace Drivers {
             virtual ~CANConnector();
 
         private:
-            CanSocket::Socket socket;
+            Connectors::CanSocket::Socket socket;
         };
     }
 };

@@ -857,13 +857,13 @@ int get_address_family(const char* hostname) {
  * @retval >=0 A valid file descriptor.
  *
  */
-
+#ifndef LIBSOCKET_LINUX
 struct ip_mreqn {
     struct in_addr imr_multiaddr; /* IP multicast address of group */
     struct in_addr imr_address; /* local IP address of interface */
     int imr_ifindex; /* Interface index */
 };
-
+#endif
 #ifdef LIBSOCKET_LINUX
 
 int create_multicast_socket(const char* group, const char* port, const char* if_name) {

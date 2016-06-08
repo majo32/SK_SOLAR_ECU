@@ -57,19 +57,15 @@ namespace Services {
                         T value;
                     };
 
-#define CU_RESPONSE_SEGMENTS_NAMES_COUNT 10
+#define CU_RESPONSE_SEGMENTS_NAMES_COUNT 6
 
                     enum CUResponseSegmentsNames {
-                        btnSpeedUp,
-                        btnSpeedDown,
-                        brakePedal,
-                        btnAutopilot,
-                        btnHorn,
-                        btnFrontLights,
-                        btnLeftBlinker,
-                        btnRightBlinker,
-                        btnWarningLights,
-                        btnSwitchDisplay
+                        Breake,
+                        Horn,
+                        FrontLights,
+                        LeftBlinker,
+                        RightBlinker,
+                        WarningLights
                     };
                     ResponseSegment<bool> CUResponseSegments[CU_RESPONSE_SEGMENTS_NAMES_COUNT];
                     ResponseSegment<std::uint8_t> speedRqst;
@@ -189,29 +185,29 @@ namespace Services {
 
                     void handleFrontLight(Messages::CAN::CAN_0Service::FrontLightResponse response) {
                         GetContext().GetComposerContext().CUResponseSegments[
-                                CAN_0Service::Context::ComposerContext::CUResponseSegmentsNames::btnFrontLights
+                                CAN_0Service::Context::ComposerContext::CUResponseSegmentsNames::FrontLights
                                 ].Change(response.state);
 
                     }
 
                     void handleBlinker(Messages::CAN::CAN_0Service::BlinkerResponse response) {
                         GetContext().GetComposerContext().CUResponseSegments[
-                                CAN_0Service::Context::ComposerContext::CUResponseSegmentsNames::btnLeftBlinker
+                                CAN_0Service::Context::ComposerContext::CUResponseSegmentsNames::LeftBlinker
                                 ].Change(response.left);
                         GetContext().GetComposerContext().CUResponseSegments[
-                                CAN_0Service::Context::ComposerContext::CUResponseSegmentsNames::btnRightBlinker
+                                CAN_0Service::Context::ComposerContext::CUResponseSegmentsNames::RightBlinker
                                 ].Change(response.right);
                     }
 
                     void handleHorn(Messages::CAN::CAN_0Service::HornResponse response) {
                         GetContext().GetComposerContext().CUResponseSegments[
-                                CAN_0Service::Context::ComposerContext::CUResponseSegmentsNames::btnHorn
+                                CAN_0Service::Context::ComposerContext::CUResponseSegmentsNames::Horn
                                 ].Change(response.state);
                     }
 
                     void handleBreakLight(Messages::CAN::CAN_0Service::BreakLightResponse response) {
                         GetContext().GetComposerContext().CUResponseSegments[
-                                CAN_0Service::Context::ComposerContext::CUResponseSegmentsNames::brakePedal
+                                CAN_0Service::Context::ComposerContext::CUResponseSegmentsNames::Breake
                                 ].Change(response.state);
                     }
 
@@ -261,12 +257,14 @@ namespace Services {
 
                 void Send0x11ToCan() {
                     Drivers::CAN::CANMessage msg(0x11, 8, NULL);
-                    GetContext().GetComposerContext().CUResponseSegments[Context::ComposerContext::CUResponseSegmentsNames::btnHorn].Change(true);
-                    msg.SetBit(1, GetContext().GetComposerContext().CUResponseSegments[Context::ComposerContext::CUResponseSegmentsNames::brakePedal].Value());
-                    msg.SetBit(2, GetContext().GetComposerContext().CUResponseSegments[Context::ComposerContext::CUResponseSegmentsNames::btnHorn].Value());
-                    msg.SetBit(3, GetContext().GetComposerContext().CUResponseSegments[Context::ComposerContext::CUResponseSegmentsNames::btnFrontLights].Value());
-                    msg.SetBit(4, GetContext().GetComposerContext().CUResponseSegments[Context::ComposerContext::CUResponseSegmentsNames::btnLeftBlinker].Value());
-                    msg.SetBit(5, GetContext().GetComposerContext().CUResponseSegments[Context::ComposerContext::CUResponseSegmentsNames::btnRightBlinker].Value());
+                    
+                    GetContext().GetComposerContext().CUResponseSegments[Context::ComposerContext::CUResponseSegmentsNames::Horn].Change(true);
+                    
+                    msg.SetBit(1, GetContext().GetComposerContext().CUResponseSegments[Context::ComposerContext::CUResponseSegmentsNames::Breake].Value());
+                    msg.SetBit(2, GetContext().GetComposerContext().CUResponseSegments[Context::ComposerContext::CUResponseSegmentsNames::Horn].Value());
+                    msg.SetBit(3, GetContext().GetComposerContext().CUResponseSegments[Context::ComposerContext::CUResponseSegmentsNames::FrontLights].Value());
+                    msg.SetBit(4, GetContext().GetComposerContext().CUResponseSegments[Context::ComposerContext::CUResponseSegmentsNames::LeftBlinker].Value());
+                    msg.SetBit(5, GetContext().GetComposerContext().CUResponseSegments[Context::ComposerContext::CUResponseSegmentsNames::RightBlinker].Value());
                     GetService().connector.SendMessage(msg);
                 }
 
