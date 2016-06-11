@@ -14,7 +14,7 @@ sources=$(for file in `find ./lib ./src -name '*.cpp'`;do echo $file; done)
 cc="arm-phytec-linux-gnueabi-g++"
 
 flags="-Wall -std=c++11 -pthread"
-libs="-I./lib -I./src"
+libs="-I./lib -I./src -I./config"
 rm -rf bin/objects/*
 rm -rf bin/tests/*
 

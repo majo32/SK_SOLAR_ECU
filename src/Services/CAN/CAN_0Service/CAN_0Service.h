@@ -258,7 +258,7 @@ namespace Services {
                 void Send0x11ToCan() {
                     Drivers::CAN::CANMessage msg(0x11, 8, NULL);
                     
-                    GetContext().GetComposerContext().CUResponseSegments[Context::ComposerContext::CUResponseSegmentsNames::Horn].Change(true);
+                    //GetContext().GetComposerContext().CUResponseSegments[Context::ComposerContext::CUResponseSegmentsNames::Horn].Change(true);
                     
                     msg.SetBit(1, GetContext().GetComposerContext().CUResponseSegments[Context::ComposerContext::CUResponseSegmentsNames::Breake].Value());
                     msg.SetBit(2, GetContext().GetComposerContext().CUResponseSegments[Context::ComposerContext::CUResponseSegmentsNames::Horn].Value());
@@ -270,7 +270,7 @@ namespace Services {
 
                 void Send0x30ToCan() {
                     Drivers::CAN::CANMessage msg(0x30, 1, NULL);
-                    GetContext().GetComposerContext().speedRqst.Change(12);
+                    //GetContext().GetComposerContext().speedRqst.Change(12);
                     msg.SetByte(0, GetContext().GetComposerContext().speedRqst.Value());
                     GetService().connector.SendMessage(msg);
                 }
