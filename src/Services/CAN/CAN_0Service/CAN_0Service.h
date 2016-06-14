@@ -256,6 +256,7 @@ namespace Services {
                     this->GetService().RegisterListener("CAN::CAN_0Service::HornResponse", listener);
                     this->GetService().RegisterListener("CAN::CAN_0Service::BreakLightResponse", listener);
                     this->GetService().RegisterListener("CAN::CAN_0Service::SpeedRqstResponse", listener);
+                    this->GetService().RegisterListener("CAN::CAN_0Service::AutopilotResponse", listener);
                 }
             public:
 
