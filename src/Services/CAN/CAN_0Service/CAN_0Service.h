@@ -110,8 +110,6 @@ namespace Services {
             Context & GetContext() {
                 return context;
             }
-            
-            
 
             Drivers::CAN::CANConnectorInterface& GetConnector() {
                 return connector;
@@ -392,44 +390,46 @@ namespace Services {
 
             };
 
-            class DecomposerThreadListener : public ECU::Listener<CAN_0Service, Context> {
-            public:
+                        /*
+                        class DecomposerThreadListener : public ECU::Listener<CAN_0Service, Context> {
+                        public:
 
-                DecomposerThreadListener(CAN_0Service & service, Context & context) : ECU::Listener<CAN_0Service, Context>(service, context) {
-                }
-                void handle(const SunStorm::Message& message) {
-                    Drivers::CAN::CANMessage msg = message.GetContent<Drivers::CAN::CANMessage>();
-                    GetService().GetDecomposer().ParseMessage(msg);
-                }
+                            DecomposerThreadListener(CAN_0Service & service, Context & context) : ECU::Listener<CAN_0Service, Context>(service, context) {
+                            }
+                            void handle(const SunStorm::Message& message) {
+                                Drivers::CAN::CANMessage msg = message.GetContent<Drivers::CAN::CANMessage>();
+                                GetService().GetDecomposer().ParseMessage(msg);
+                            }
                 
 
-            };
-
+                        };
+             */
             class DecomposerThread : public SunStorm::ServiceThread {
             public:
 
                 DecomposerThread(CAN_0Service& service, Services::CAN::CAN_0Service::Decomposer & decomposer, Drivers::CAN::CANConnectorInterface & connector) :
-                ServiceThread(service), decomposer(decomposer), listener(service,service.GetContext()), connector(connector) {
+                ServiceThread(service), decomposer(decomposer), /*listener(service,service.GetContext()), */connector(connector) {
                 }
 
                 void Run() {
                     Drivers::CAN::CANMessage msg;
                     SunStorm::Message m;
                     while (connector.WaitForMessage(msg)) {
-                        //decomposer.ParseMessage(msg);
-                        m.SetContent<Drivers::CAN::CANMessage>(msg);
-                        decomposer.GetService().GetExecutor().EnqueueTask(SunStorm::MessengerTask({&listener,m}));
+                        decomposer.ParseMessage(msg);
+                        //m.SetContent<Drivers::CAN::CANMessage>(msg);
+                        //decomposer.GetService().GetExecutor().EnqueueTask(SunStorm::MessengerTask({&listener,m}));
                     }
 
                 }
             private:
                 Services::CAN::CAN_0Service::Decomposer & decomposer;
-                Services::CAN::CAN_0Service::DecomposerThreadListener listener;
+                //Services::CAN::CAN_0Service::DecomposerThreadListener listener;
                 Drivers::CAN::CANConnectorInterface & connector;
 
             };
-            
+
         public:
+
             Decomposer & GetDecomposer() {
                 return decomposer;
             }

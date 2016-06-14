@@ -25,7 +25,7 @@ int main(int argc, char** argv) {
     SunStorm::System::RegisterService<Services::BlinkerService>("BlinkerService");
     SunStorm::System::RegisterService<Services::FrontBreakLightService>("FrontBreakLightService");
     SunStorm::System::RegisterService<Services::HornService>("HornService");
-    SunStorm::System::RegisterService<Services::LcdService>("LcdService");
+    //SunStorm::System::RegisterService<Services::LcdService>("LcdService");
     SunStorm::Message msg("__INIT__");
     SunStorm::System::GetMessenger().SendMessage(msg);
 

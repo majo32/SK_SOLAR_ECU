@@ -40,13 +40,33 @@ namespace Drivers {
             return true;
         }
 
+        bool ParseNext(char c, char * s, int & i) {
+            if (c == '\n' || c == '\r') {
+                s[i] = '\0';
+                i = 0;
+                return true;
+            } else {
+                s[i] = c;
+                i++;
+                return false;
+            }
+        }
+
         bool CANSimulatorConnector::WaitForMessage(CANMessage& message) {
-            std::string s;
+            std::string s,s1;
             s.resize(66);
+            s1.resize(1);
+            char str [100];
             bool r = false;
+            int i=0;
+            //char c;
             while (!r) {
                 try {
-                    sock >> s;
+                    sock >> s1;
+                    while(ParseNext(s1.at(0),str,i) == false){
+                        sock >> s1;
+                    }
+                    s = str;
                     this->AssemblyMessageObject(s, message);
                     r = true;
                 } catch (const libsocket::socket_exception& exc) {
@@ -124,7 +144,7 @@ namespace Drivers {
         }
 
         void CANSimulatorConnector::AssemblyMessageString(std::string& s, const CANMessage& message) {
-            
+
             std::stringstream str;
             str << std::hex << message.GetId();
             str >> s;
