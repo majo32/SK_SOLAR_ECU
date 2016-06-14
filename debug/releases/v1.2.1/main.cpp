@@ -15,7 +15,7 @@ int main(int argc, char** argv) {
 #if SOLAR_SIMULATION == 1
     Drivers::CAN::CANSimulatorConnector can_connector(logger);
 #else
-    Drivers::CAN::CANConnector can_connector(logger);
+    Drivers::CAN::CANConnector can_connector(logger,"can0");
 #endif
     can_connector.Connect();
 

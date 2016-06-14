@@ -38,8 +38,10 @@ namespace Messages {
             };
             
             
+            struct AutopilotResponse {
+                bool status;
+            };
             
-
             struct SpeedRqstResponse {
                 std::uint8_t value;
             };

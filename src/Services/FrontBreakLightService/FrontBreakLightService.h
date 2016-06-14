@@ -10,12 +10,14 @@
 
 #include <SunStorm/Framework.h>
 #include "Services/Blinker/MSG_STRUCTURES.h"
+#include "../../Services/CAN/CAN_0Service/CAN_0Service_messages.h"
+
 namespace Services {
 
     class FrontBreakLightService : public SunStorm::Service {
     public:
         Messages::BlinkerServiceS::CAN_SC commands;
-
+        
         FrontBreakLightService(std::string name) :
         SunStorm::Service(name),
         ctx(*this), listenerCan_CU_STATE(*this, ctx) {
@@ -35,6 +37,10 @@ namespace Services {
 
 
             FrontBreakLightService & frontBreakLightService;
+            Messages::CAN::CAN_0Service::BreakLightResponse cmdBrake;
+            Messages::CAN::CAN_0Service::FrontLightResponse cmdFrontLight;
+             SunStorm::Message mB{"CAN::CAN_0Service::BreakLightResponse"};
+             SunStorm::Message mF{"CAN::CAN_0Service::FrontLightResponse"}  ;
 
         };
 
@@ -60,8 +66,10 @@ namespace Services {
     private:
         Context ctx;
         Listener_CAN_CU_STATE listenerCan_CU_STATE;
+        
     public:
-        void setSendContent(SunStorm::Message & message, Messages::BlinkerServiceS::CAN_SC content);
+        void setSendContent(SunStorm::Message & message, Messages::CAN::CAN_0Service::FrontLightResponse content);
+        void setSendContent(SunStorm::Message & message,  Messages::CAN::CAN_0Service::BreakLightResponse content);
     };
 
 };

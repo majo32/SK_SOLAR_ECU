@@ -78,6 +78,31 @@ namespace Drivers {
             this->data[pos] = data;
         }
 
+        //LogMessage
+
+        void LogMessage(SunStorm::Logger & logger, const CANMessage & msg) {
+            logger.debug("Can Message : ")
+                    << " L [" 
+                    << msg.GetLength()
+                    << "] ID ["
+                    << msg.GetId()
+                    << "] "
+                    << msg.GetDataAt(0)
+                    << ":"
+                    << msg.GetDataAt(1)
+                    << ":"
+                    << msg.GetDataAt(2)
+                    << ":"
+                    << msg.GetDataAt(3)
+                    << ":"
+                    << msg.GetDataAt(4)
+                    << ":"
+                    << msg.GetDataAt(5)
+                    << ":"
+                    << msg.GetDataAt(6)
+                    << ":"
+                    << msg.GetDataAt(7);
+        }
         //CanConnectorInterface
 
         CANConnectorInterface::CANConnectorInterface(SunStorm::Logger & logger) : logger(logger) {

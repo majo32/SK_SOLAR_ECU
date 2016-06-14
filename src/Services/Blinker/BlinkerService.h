@@ -13,6 +13,7 @@
 
 #include <SunStorm/Framework.h>
 #include "Services/Blinker/MSG_STRUCTURES.h"
+#include "../../Services/CAN/CAN_0Service/CAN_0Service_messages.h"
 namespace Services {
 
     class BlinkerService : public SunStorm::Service {
@@ -53,7 +54,9 @@ namespace Services {
             int counterPeriod2; //counter na poccitanie cyklu bliknuti
             bool localStatusBtnLeft;
             bool localStatusBtnRight;
- Messages::BlinkerServiceS::CAN_SC messagesSC;
+            bool setValues;
+            //Messages::BlinkerServiceS::CAN_SC messagesSC;
+            Messages::CAN::CAN_0Service::BlinkerResponse messagesSC;
 
         };
 
@@ -99,7 +102,7 @@ namespace Services {
             void handle(const SunStorm::Message& message);
         };
     public:
-        void setSendContent(SunStorm::Message & message, Messages::BlinkerServiceS::CAN_SC stukturka);
+        void setSendContent(SunStorm::Message & message,  Messages::CAN::CAN_0Service::BlinkerResponse stukturka);
     private:
         Context ctx;
         Listener_1Can_CU_STATE_Blinkers listener1;

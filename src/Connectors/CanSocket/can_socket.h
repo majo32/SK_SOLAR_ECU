@@ -20,7 +20,7 @@
 #include <sys/socket.h>
 #include <sys/ioctl.h>
 
-#ifndef SOLAR_SIMULATION
+#if SOLAR_SIMULATION == 0
 #include <linux/can.h>
 #include <linux/can/raw.h>
 #endif

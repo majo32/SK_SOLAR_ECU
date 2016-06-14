@@ -10,6 +10,7 @@
 
 #include <SunStorm/Framework.h>
 #include "Services/Blinker/MSG_STRUCTURES.h"
+#include "../../Services/CAN/CAN_0Service/CAN_0Service_messages.h"
 namespace Services {
 
     class HornService : public SunStorm::Service {
@@ -31,9 +32,11 @@ namespace Services {
             Context(HornService& hornService) :
             hornService(hornService) {
             }
-
+        public:
             HornService & hornService;
-            int counter;
+            Messages::CAN::CAN_0Service::HornResponse comannd;
+         
+            
         };
 
         class ListenerBase : public SunStorm::ServiceListener<HornService, Context> {
@@ -60,13 +63,13 @@ namespace Services {
         };
 
 
-
+    public:
+        void setSendContent(SunStorm::Message & message, Messages::CAN::CAN_0Service::HornResponse  content);
     private:
         Context ctx;
         Listener_1Can_CU_STATE listener1;
 
-    public:
-        void setSendContent(SunStorm::Message & message, Messages::BlinkerServiceS::CAN_SC structure);
+    
     };
 };
 

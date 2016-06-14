@@ -69,6 +69,7 @@ namespace Services {
                     };
                     ResponseSegment<bool> CUResponseSegments[CU_RESPONSE_SEGMENTS_NAMES_COUNT];
                     ResponseSegment<std::uint8_t> speedRqst;
+                    ResponseSegment<bool> autopilot;
                 };
 
                 Context() :
@@ -177,10 +178,18 @@ namespace Services {
                         if (message.GetName() == "CAN::CAN_0Service::SpeedRqstResponse") {
                             handleSpeedRqst(message.GetContent<Messages::CAN::CAN_0Service::SpeedRqstResponse>());
                         }
+
+                        if (message.GetName() == "CAN::CAN_0Service::AutopilotResponse") {
+                            handleAutopilotStatus(message.GetContent<Messages::CAN::CAN_0Service::AutopilotResponse>());
+                        }
                     }
 
                     void handleSpeedRqst(Messages::CAN::CAN_0Service::SpeedRqstResponse response) {
                         GetContext().GetComposerContext().speedRqst.Change(response.value);
+                    }
+
+                    void handleAutopilotStatus(Messages::CAN::CAN_0Service::AutopilotResponse response) {
+                        GetContext().GetComposerContext().autopilot.Change(response.status);
                     }
 
                     void handleFrontLight(Messages::CAN::CAN_0Service::FrontLightResponse response) {
@@ -233,6 +242,7 @@ namespace Services {
 
                     void handle(const SunStorm::Message& message) {
                         GetService().composer.Send0x30ToCan();
+                        GetService().composer.Send0x31ToCan();
                     }
 
                 };
@@ -257,21 +267,32 @@ namespace Services {
 
                 void Send0x11ToCan() {
                     Drivers::CAN::CANMessage msg(0x11, 8, NULL);
-                    
-                    //GetContext().GetComposerContext().CUResponseSegments[Context::ComposerContext::CUResponseSegmentsNames::Horn].Change(true);
+
                     
                     msg.SetBit(1, GetContext().GetComposerContext().CUResponseSegments[Context::ComposerContext::CUResponseSegmentsNames::Breake].Value());
                     msg.SetBit(2, GetContext().GetComposerContext().CUResponseSegments[Context::ComposerContext::CUResponseSegmentsNames::Horn].Value());
                     msg.SetBit(3, GetContext().GetComposerContext().CUResponseSegments[Context::ComposerContext::CUResponseSegmentsNames::FrontLights].Value());
                     msg.SetBit(4, GetContext().GetComposerContext().CUResponseSegments[Context::ComposerContext::CUResponseSegmentsNames::LeftBlinker].Value());
                     msg.SetBit(5, GetContext().GetComposerContext().CUResponseSegments[Context::ComposerContext::CUResponseSegmentsNames::RightBlinker].Value());
+                    
+                    msg.SetBit(7, true);
+                    
+                    
                     GetService().connector.SendMessage(msg);
                 }
 
                 void Send0x30ToCan() {
                     Drivers::CAN::CANMessage msg(0x30, 1, NULL);
-                    //GetContext().GetComposerContext().speedRqst.Change(12);
+                    
                     msg.SetByte(0, GetContext().GetComposerContext().speedRqst.Value());
+                    GetService().connector.SendMessage(msg);
+                }
+
+                void Send0x31ToCan() {
+                    Drivers::CAN::CANMessage msg(0x31, 1, NULL);
+                    
+                    msg.SetBit(0, GetContext().GetComposerContext().autopilot.Value());
+                    msg.SetBit(1, true);
                     GetService().connector.SendMessage(msg);
                 }
 
@@ -318,6 +339,7 @@ namespace Services {
             private:
 
                 void ParseMessage0x10(Drivers::CAN::CANMessage & message) {
+                    //GetService().Log().debug("Parsing 10 : ") << message.GetDataAt(0);
                     Messages::CAN::CAN_0Service::ControlUnitRequest cuRequest({
                         message.IsBitSet(1),
                         message.IsBitSet(2),
@@ -336,7 +358,7 @@ namespace Services {
                 }
 
                 void ParseMessage0x21(Drivers::CAN::CANMessage & message) {
-                    GetService().Log().debug("Parsing 21 : ") << message.GetDataAt(0);
+                    //GetService().Log().debug("Parsing 21 : ") << message.GetDataAt(0);
                     Messages::CAN::CAN_0Service::SpeedRqstRequest speedRequest({
                         message.GetDataAt(0)
                     });
@@ -346,7 +368,7 @@ namespace Services {
                 }
 
                 void ParseMessage0x22(Drivers::CAN::CANMessage & message) {
-                    GetService().Log().debug("Parsing 22 : ") << message.GetDataAt(0);
+                    //GetService().Log().debug("Parsing 22 : ") << message.GetDataAt(0);
                     Messages::CAN::CAN_0Service::SpeedActRequest speedRequest({
                         message.GetDataAt(0)
                     });
@@ -356,7 +378,7 @@ namespace Services {
                 }
 
                 void ParseMessage0x23(Drivers::CAN::CANMessage & message) {
-                    GetService().Log().debug("Parsing 23 : ") << message.GetDataAt(0);
+                    //GetService().Log().debug("Parsing 23 : ") << message.GetDataAt(0);
                     Messages::CAN::CAN_0Service::SpeedOptRequest speedRequest({
                         message.GetDataAt(0)
                     });

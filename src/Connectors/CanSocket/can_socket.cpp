@@ -3,7 +3,7 @@
 
 int can_socket_start_socket(const char* ifname, int * error) {
     int s = 0;
-#ifndef SOLAR_SIMULATION
+#if SOLAR_SIMULATION == 0
     struct sockaddr_can addr;
     struct ifreq ifr;
 
@@ -29,7 +29,7 @@ int can_socket_start_socket(const char* ifname, int * error) {
 
 int can_socket_send_msg(int socket, int id, int len, const unsigned char * buff, int * error) {
     int nbytes = 0;
-#ifndef SOLAR_SIMULATION
+#if SOLAR_SIMULATION == 0
     struct can_frame frame;
 
     frame.can_id = id;
@@ -46,7 +46,7 @@ int can_socket_send_msg(int socket, int id, int len, const unsigned char * buff,
 
 int can_socket_wait_for_msg(int socket, int * id, int * len, unsigned char * buff, int * error) {
     int nbytes = 0;
-#ifndef SOLAR_SIMULATION
+#if SOLAR_SIMULATION == 0
     struct can_frame frame;
 
     nbytes = read(socket, &frame, sizeof (struct can_frame));
@@ -61,7 +61,7 @@ int can_socket_wait_for_msg(int socket, int * id, int * len, unsigned char * buf
 }
 
 int can_socket_destroy_socket(int socket, int * error) {
-#ifndef SOLAR_SIMULATION
+#if SOLAR_SIMULATION == 0
     close(socket);
 #endif
     return 1;

@@ -22,12 +22,16 @@ namespace Drivers {
         }
 
         bool CANConnector::SendMessage(const CANMessage& message) {
+            Log().debug("CAN :: Sending ... ");
             socket.SendMessage(message);
+            Drivers::CAN::LogMessage(Log(), message);
             return true;
         }
 
         bool CANConnector::WaitForMessage(CANMessage& message) {
+            Log().debug("CAN :: Waiting ... ");
             socket.WaitForMessage(message);
+            Drivers::CAN::LogMessage(Log(), message);
             return true;
         }
 

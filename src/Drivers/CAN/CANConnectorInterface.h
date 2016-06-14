@@ -35,6 +35,8 @@ namespace Drivers {
             std::uint8_t length;
             std::uint8_t data[CAN_MSG_LEN];
         };
+        
+        void LogMessage(SunStorm::Logger & logger, const CANMessage & msg);
 
         class CANConnectorInterface {
         public:
