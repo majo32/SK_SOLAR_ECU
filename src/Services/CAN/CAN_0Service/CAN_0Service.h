@@ -110,6 +110,8 @@ namespace Services {
             Context & GetContext() {
                 return context;
             }
+            
+            
 
             Drivers::CAN::CANConnectorInterface& GetConnector() {
                 return connector;
@@ -185,6 +187,7 @@ namespace Services {
                     }
 
                     void handleSpeedRqst(Messages::CAN::CAN_0Service::SpeedRqstResponse response) {
+                        GetService().Log().debug("Speed set ") << response.value;
                         GetContext().GetComposerContext().speedRqst.Change(response.value);
                     }
 
@@ -248,8 +251,8 @@ namespace Services {
                 };
 
                 void RegisterListeners() {
-                    this->GetService().RegisterInterval(1000, CUtimerListener);
-                    this->GetService().RegisterInterval(1000, speedRqstTimer);
+                    this->GetService().RegisterInterval(100, CUtimerListener);
+                    this->GetService().RegisterInterval(100, speedRqstTimer);
                     this->GetService().RegisterListener("CAN::CAN_0Service::FrontLightResponse", listener);
                     this->GetService().RegisterListener("CAN::CAN_0Service::BlinkerResponse", listener);
                     this->GetService().RegisterListener("CAN::CAN_0Service::HornResponse", listener);
@@ -268,29 +271,29 @@ namespace Services {
                 void Send0x11ToCan() {
                     Drivers::CAN::CANMessage msg(0x11, 8, NULL);
 
-                    
+
                     msg.SetBit(1, GetContext().GetComposerContext().CUResponseSegments[Context::ComposerContext::CUResponseSegmentsNames::Breake].Value());
                     msg.SetBit(2, GetContext().GetComposerContext().CUResponseSegments[Context::ComposerContext::CUResponseSegmentsNames::Horn].Value());
                     msg.SetBit(3, GetContext().GetComposerContext().CUResponseSegments[Context::ComposerContext::CUResponseSegmentsNames::FrontLights].Value());
                     msg.SetBit(4, GetContext().GetComposerContext().CUResponseSegments[Context::ComposerContext::CUResponseSegmentsNames::LeftBlinker].Value());
                     msg.SetBit(5, GetContext().GetComposerContext().CUResponseSegments[Context::ComposerContext::CUResponseSegmentsNames::RightBlinker].Value());
-                    
+
                     msg.SetBit(7, true);
-                    
-                    
+
+
                     GetService().connector.SendMessage(msg);
                 }
 
                 void Send0x30ToCan() {
                     Drivers::CAN::CANMessage msg(0x30, 1, NULL);
-                    
+                    // GetContext().GetComposerContext().speedRqst.Change(12);
                     msg.SetByte(0, GetContext().GetComposerContext().speedRqst.Value());
                     GetService().connector.SendMessage(msg);
                 }
 
                 void Send0x31ToCan() {
                     Drivers::CAN::CANMessage msg(0x31, 1, NULL);
-                    
+
                     msg.SetBit(0, GetContext().GetComposerContext().autopilot.Value());
                     msg.SetBit(1, true);
                     GetService().connector.SendMessage(msg);
@@ -389,25 +392,47 @@ namespace Services {
 
             };
 
+            class DecomposerThreadListener : public ECU::Listener<CAN_0Service, Context> {
+            public:
+
+                DecomposerThreadListener(CAN_0Service & service, Context & context) : ECU::Listener<CAN_0Service, Context>(service, context) {
+                }
+                void handle(const SunStorm::Message& message) {
+                    Drivers::CAN::CANMessage msg = message.GetContent<Drivers::CAN::CANMessage>();
+                    GetService().GetDecomposer().ParseMessage(msg);
+                }
+                
+
+            };
+
             class DecomposerThread : public SunStorm::ServiceThread {
             public:
 
-                DecomposerThread(Service& service, Services::CAN::CAN_0Service::Decomposer & decomposer, Drivers::CAN::CANConnectorInterface & connector) :
-                ServiceThread(service), decomposer(decomposer), connector(connector) {
+                DecomposerThread(CAN_0Service& service, Services::CAN::CAN_0Service::Decomposer & decomposer, Drivers::CAN::CANConnectorInterface & connector) :
+                ServiceThread(service), decomposer(decomposer), listener(service,service.GetContext()), connector(connector) {
                 }
 
                 void Run() {
                     Drivers::CAN::CANMessage msg;
+                    SunStorm::Message m;
                     while (connector.WaitForMessage(msg)) {
-                        decomposer.ParseMessage(msg);
+                        //decomposer.ParseMessage(msg);
+                        m.SetContent<Drivers::CAN::CANMessage>(msg);
+                        decomposer.GetService().GetExecutor().EnqueueTask(SunStorm::MessengerTask({&listener,m}));
                     }
 
                 }
             private:
                 Services::CAN::CAN_0Service::Decomposer & decomposer;
+                Services::CAN::CAN_0Service::DecomposerThreadListener listener;
                 Drivers::CAN::CANConnectorInterface & connector;
 
             };
+            
+        public:
+            Decomposer & GetDecomposer() {
+                return decomposer;
+            }
 
         private:
             Context context;

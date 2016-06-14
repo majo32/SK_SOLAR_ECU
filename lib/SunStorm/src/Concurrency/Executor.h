@@ -14,6 +14,7 @@
 #include "../Util/Runnable.h"
 #include "Thread.h"
 #include <string>
+#include <iostream>
 
 namespace SunStorm {
 
@@ -48,7 +49,11 @@ namespace SunStorm {
         void Run() {
             T t;
             while (queue.waitAndPop(t)) {
-                t.Run();
+                try {
+                    t.Run();
+                } catch (...) {
+                    std::cout << "Fatality in executor !!!";
+                }
             }
         }
     };

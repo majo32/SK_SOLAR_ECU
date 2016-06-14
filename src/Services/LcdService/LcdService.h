@@ -159,6 +159,6 @@ namespace Services {
         
     };
 
-}
+};
 
 #endif /* LCDSERVICE_H */

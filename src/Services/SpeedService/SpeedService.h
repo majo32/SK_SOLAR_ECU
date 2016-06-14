@@ -10,6 +10,7 @@
 
 #include <SunStorm/Framework.h>
 #include "SpeedService_messages.h"
+#include "../CAN/CAN_0Service/CAN_0Service_messages.h"
 
 #include <string>
 
@@ -52,13 +53,13 @@ namespace Services {
             bool localBtnAutopilotStatus; // stav tlacidla autopilot z poslednej spravy
             bool localPedalStatus; // stav brzdoveho pedalu z poslednej spravy
 
-            int shortPressChangeValue = 1; // hodnota zmeny rychlosti pri kratkom stlaceni tlacidla
-            int longPressChangeValue = 5; // hodnota zmeny rychlosti pri dlhom stlaceni tlacidla
+            uint8_t shortPressChangeValue = 1; // hodnota zmeny rychlosti pri kratkom stlaceni tlacidla
+            uint8_t longPressChangeValue = 5; // hodnota zmeny rychlosti pri dlhom stlaceni tlacidla
             long btnHoldTime = 1000; // cas v ms po ktorom sa berie stlacenie tlacidla za dlhe stlacenie
             long longPressSendingIntervalTime = 400; // interval v ms v ktorom sa bude zvysovat rychlost pri dlhom stlaceni tlacidla
 
-            int speedUpChangeValue; // hodnota o ktoru sa ma zvysit rychlost
-            int speedDownChangeValue; // hodnota o ktoru sa ma znizit rychlost
+            uint8_t speedUpChangeValue; // hodnota o ktoru sa ma zvysit rychlost
+            uint8_t speedDownChangeValue; // hodnota o ktoru sa ma znizit rychlost
 
             long btnUpTimeoutID; // ID casovaca timeout pre tlacidlo zvysenia rychlosti (casovac nespusteny -> ID=0)
             long btnDownTimeoutID; // ID casovaca timeout pre tlacidlo znizenia rychlosti (casovac nespusteny -> ID=0)
@@ -67,9 +68,9 @@ namespace Services {
             long longPressDownSenderID; // ID casovaca interval pre tlacidlo zvysenia rychlosti (casovac nespusteny -> ID=0)
 
 
-            int localRequiredSpeed; // pozadovana rychlost
-            int localActualSpeed; // aktualna rychlost z poslednej spravy
-            int localOptimalSpeed; // optimalna rychlost z poslednej spravy
+            uint8_t localRequiredSpeed; // pozadovana rychlost
+            uint8_t localActualSpeed; // aktualna rychlost z poslednej spravy
+            uint8_t localOptimalSpeed; // optimalna rychlost z poslednej spravy
         };
 
         class ListenerBase : public SunStorm::ServiceListener<SpeedService, Context> {
@@ -144,9 +145,9 @@ namespace Services {
         void btn_down_handle(bool state, SpeedService &s);
         void btn_autopilot_handle(bool state);
         void speed_autopilot(bool status);
-        void speed_rqst_down(int bValue);
-        void speed_rqst_up(int bValue);
-        void speed_rqst_set(int value);
+        void speed_rqst_down(uint8_t bValue);
+        void speed_rqst_up(uint8_t bValue);
+        void speed_rqst_set(uint8_t value);
         void btn_start_timeout(int btn, SpeedService &s);
 
     private:

@@ -8,6 +8,7 @@
 #include <Services/Blinker/BlinkerService.h>
 #include <Services/FrontBreakLightService/FrontBreakLightService.h>
 #include <Services/HornService/HornService.h>
+#include <Services/LcdService/LcdService.h>
 
 int main(int argc, char** argv) {
     SunStorm::Logger & logger = SunStorm::LoggerManager::RegisterLogger("MAIN");
@@ -24,6 +25,7 @@ int main(int argc, char** argv) {
     SunStorm::System::RegisterService<Services::BlinkerService>("BlinkerService");
     SunStorm::System::RegisterService<Services::FrontBreakLightService>("FrontBreakLightService");
     SunStorm::System::RegisterService<Services::HornService>("HornService");
+    SunStorm::System::RegisterService<Services::LcdService>("LcdService");
     SunStorm::Message msg("__INIT__");
     SunStorm::System::GetMessenger().SendMessage(msg);
 
